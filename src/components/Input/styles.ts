@@ -10,6 +10,7 @@ export const Container = styled.TextInput`
   background-color: ${({ theme }) => theme.colors.primary};
   border-radius: 8px;
 
+  font-family: ${({ theme }) => theme.fonts.regular};
   font-size: ${RFValue(16)}px;
   color: ${({ theme }) => theme.colors.secondary};
 `;
