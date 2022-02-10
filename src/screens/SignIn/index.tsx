@@ -1,4 +1,5 @@
 import * as React from "react";
+import { TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useKeyboard } from "@react-native-community/hooks";
 import {
@@ -24,12 +25,18 @@ import {
 } from "./styles";
 
 const SignIn: React.FC = () => {
+  //Hooks
   const keyboard = useKeyboard();
   const { navigate } = useNavigation();
   const theme = useTheme();
 
+  //States
   const [name, setName] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+
+  //Refs
+  const inputEmailRef = React.useRef<TextInput>(null);
+  const inputPasswordRef = React.useRef<TextInput>(null);
 
   const logoOpacity = useSharedValue(1);
   const offsetY = useSharedValue(0);
@@ -59,6 +66,17 @@ const SignIn: React.FC = () => {
     navigate("SignUp");
   }
 
+  function inputOnBlur() {
+    if (keyboard.keyboardShown === false) {
+      inputEmailRef.current?.blur();
+      inputPasswordRef.current?.blur();
+    }
+  }
+
+  React.useEffect(() => {
+    inputOnBlur();
+  }, [keyboard.keyboardShown]);
+
   return (
     <Container>
       <LogoWrapper style={animatedLogoOpacity}>
@@ -67,11 +85,19 @@ const SignIn: React.FC = () => {
 
       <Content style={animatedOffsetY}>
         <InputWrapper>
-          <Input value={name} onChangeText={setName} placeholder="E-mail" />
           <Input
+            ref={inputEmailRef}
+            value={name}
+            onChangeText={setName}
+            placeholder="E-mail"
+            onBlur={inputOnBlur}
+          />
+          <Input
+            ref={inputPasswordRef}
             value={password}
             onChangeText={setPassword}
             placeholder="Password"
+            onBlur={inputOnBlur}
           />
         </InputWrapper>
 
