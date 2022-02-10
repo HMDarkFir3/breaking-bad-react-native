@@ -38,6 +38,7 @@ const SignIn: React.FC = () => {
   const inputEmailRef = React.useRef<TextInput>(null);
   const inputPasswordRef = React.useRef<TextInput>(null);
 
+  //Animations
   const logoOpacity = useSharedValue(1);
   const offsetY = useSharedValue(0);
 
@@ -58,12 +59,9 @@ const SignIn: React.FC = () => {
     logoOpacity.value = withTiming(0, { duration: 300 });
     offsetY.value = withTiming(RFValue(-150), { duration: 600 });
   } else {
+    ("worklet");
     logoOpacity.value = withTiming(1, { duration: 300 });
     offsetY.value = withTiming(RFValue(0), { duration: 600 });
-  }
-
-  function handleSignUp() {
-    navigate("SignUp");
   }
 
   function inputOnBlur() {
@@ -71,6 +69,10 @@ const SignIn: React.FC = () => {
       inputEmailRef.current?.blur();
       inputPasswordRef.current?.blur();
     }
+  }
+
+  function handleSignUp() {
+    navigate("SignUp");
   }
 
   React.useEffect(() => {
