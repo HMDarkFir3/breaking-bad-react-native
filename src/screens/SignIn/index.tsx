@@ -1,7 +1,13 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useSharedValue, useAnimatedStyle } from "react-native-reanimated";
+import { useKeyboard } from "@react-native-community/hooks";
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 import { useTheme } from "styled-components";
+import { RFValue } from "react-native-responsive-fontsize";
 
 //Components
 import Input from "../../components/Input";
@@ -18,6 +24,7 @@ import {
 } from "./styles";
 
 const SignIn: React.FC = () => {
+  const keyboard = useKeyboard();
   const { navigate } = useNavigation();
   const theme = useTheme();
 
@@ -39,12 +46,21 @@ const SignIn: React.FC = () => {
     };
   });
 
+  if (keyboard.keyboardShown) {
+    ("worklet");
+    logoOpacity.value = withTiming(0, { duration: 300 });
+    offsetY.value = withTiming(RFValue(-150), { duration: 600 });
+  } else {
+    logoOpacity.value = withTiming(1, { duration: 300 });
+    offsetY.value = withTiming(RFValue(0), { duration: 600 });
+  }
+
   function handleSignUp() {
     navigate("SignUp");
   }
 
   return (
-    <Container behavior="height">
+    <Container>
       <LogoWrapper style={animatedLogoOpacity}>
         <Logo source={require("../../assets/logo.png")} />
       </LogoWrapper>

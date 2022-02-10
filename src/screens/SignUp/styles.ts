@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import Animated from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 
@@ -10,6 +11,10 @@ export const Container = styled.View`
   padding: 0 32px;
 
   background-color: ${({ theme }) => theme.colors.background};
+`;
+
+export const Content = styled(Animated.View)`
+  width: 100%;
 `;
 
 export const BackButtonWrapper = styled.TouchableOpacity`
