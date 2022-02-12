@@ -9,7 +9,7 @@ declare module "styled-components" {
       primary: string;
       secondary: string;
       placeholder_color: string;
-      white: string;
+      primary_text: string;
     };
 
     fonts: {

@@ -5,9 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthRoutes from "./auth.routes";
 
 //Interfaces
-export interface RoutesProps {
-  SignUp: undefined;
-}
+export interface RoutesProps {}
 
 const Routes: React.FC = () => {
   return (

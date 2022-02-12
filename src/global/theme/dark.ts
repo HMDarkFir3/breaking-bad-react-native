@@ -5,8 +5,8 @@ export const dark = {
     background: "#171717",
     primary: "#070707",
     secondary: "#085d2e",
+    primary_text: "#ffffff",
     placeholder_color: "#555555",
-    white: "#ffffff",
   },
 
   fonts: {

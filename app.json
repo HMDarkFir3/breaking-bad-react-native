@@ -2,10 +2,9 @@
   "expo": {
     "name": "favorite-breaking-bad",
     "slug": "favorite-breaking-bad",
+    "scheme": "favorite-breaking-bad",
     "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "assetBundlePatterns": ["**/*"]
   },
   "name": "favorite-breaking-bad"
 }

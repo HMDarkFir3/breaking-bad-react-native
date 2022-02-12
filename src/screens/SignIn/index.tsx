@@ -1,17 +1,9 @@
 import * as React from "react";
-import { TextInput } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useKeyboard } from "@react-native-community/hooks";
-import {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
-import { useTheme } from "styled-components";
-import { RFValue } from "react-native-responsive-fontsize";
+
+//Hooks
+import { useAuth } from "../../hooks/useAuth";
 
 //Components
-import Input from "../../components/Input";
 import Button from "../../components/Button";
 
 //Styles
@@ -20,101 +12,41 @@ import {
   LogoWrapper,
   Logo,
   Content,
-  InputWrapper,
+  Title,
   ButtonWrapper,
 } from "./styles";
 
+//SVG
+import LogoGoogleSvg from "../../assets/logo_google.svg";
+import LogoGithubSvg from "../../assets/logo_github.svg";
+
 const SignIn: React.FC = () => {
-  //Hooks
-  const keyboard = useKeyboard();
-  const { navigate } = useNavigation();
-  const theme = useTheme();
+  const { user, loadingAuthGoogle, loadingAuthGithub, signInWithGoogle } =
+    useAuth();
 
-  //States
-  const [name, setName] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
-
-  //Refs
-  const inputEmailRef = React.useRef<TextInput>(null);
-  const inputPasswordRef = React.useRef<TextInput>(null);
-
-  //Animations
-  const logoOpacity = useSharedValue(1);
-  const offsetY = useSharedValue(0);
-
-  const animatedLogoOpacity = useAnimatedStyle(() => {
-    return {
-      opacity: logoOpacity.value,
-    };
-  });
-
-  const animatedOffsetY = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: offsetY.value }],
-    };
-  });
-
-  if (keyboard.keyboardShown) {
-    ("worklet");
-    logoOpacity.value = withTiming(0, { duration: 300 });
-    offsetY.value = withTiming(RFValue(-150), { duration: 600 });
-  } else {
-    ("worklet");
-    logoOpacity.value = withTiming(1, { duration: 300 });
-    offsetY.value = withTiming(RFValue(0), { duration: 600 });
-  }
-
-  function inputOnBlur() {
-    if (keyboard.keyboardShown === false) {
-      inputEmailRef.current?.blur();
-      inputPasswordRef.current?.blur();
-    }
-  }
-
-  function handleSignUp() {
-    navigate("SignUp");
-  }
-
-  React.useEffect(() => {
-    inputOnBlur();
-  }, [keyboard.keyboardShown]);
+  console.log(user);
 
   return (
     <Container>
-      <LogoWrapper style={animatedLogoOpacity}>
+      <LogoWrapper>
         <Logo source={require("../../assets/logo.png")} />
       </LogoWrapper>
 
-      <Content style={animatedOffsetY}>
-        <InputWrapper>
-          <Input
-            ref={inputEmailRef}
-            value={name}
-            onChangeText={setName}
-            placeholder="E-mail"
-            onBlur={inputOnBlur}
-          />
-          <Input
-            ref={inputPasswordRef}
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Password"
-            onBlur={inputOnBlur}
-          />
-        </InputWrapper>
+      <Content>
+        <Title>Do social login to enter the app</Title>
 
         <ButtonWrapper>
           <Button
-            title="Sign In"
-            font={theme.fonts.bold}
-            backgroundColor={theme.colors.secondary}
+            icon={LogoGoogleSvg}
+            title="Google"
+            isLoading={loadingAuthGoogle}
+            onPress={signInWithGoogle}
           />
 
           <Button
-            title="Don't have an account? Sign Up"
-            font={theme.fonts.light}
-            backgroundColor={theme.colors.background}
-            onPress={handleSignUp}
+            icon={LogoGithubSvg}
+            title="GitHub"
+            isLoading={loadingAuthGithub}
           />
         </ButtonWrapper>
       </Content>

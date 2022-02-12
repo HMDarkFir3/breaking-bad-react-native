@@ -11,6 +11,9 @@ import {
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 
+//Contexts
+import AuthProvider from "./src/contexts/AuthContext";
+
 //Routes
 import Routes from "./src/routes";
 
@@ -31,8 +34,10 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={dark}>
-      <StatusBar style="light" translucent={true} />
-      <Routes />
+      <AuthProvider>
+        <StatusBar style="light" translucent={true} />
+        <Routes />
+      </AuthProvider>
     </ThemeProvider>
   );
 };
