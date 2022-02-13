@@ -60,6 +60,8 @@ const BreakingBadProvider: React.FC<BreakingBadProviderProps> = ({
         },
       });
 
+      console.log(response.data);
+
       setEpisodes(response.data);
     } catch (error) {
       console.log(error.message);
