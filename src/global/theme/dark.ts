@@ -6,6 +6,7 @@ export const dark = {
     primary: "#070707",
     secondary: "#085d2e",
     primary_text: "#ffffff",
+    secondary_text: "#085d2e",
     placeholder_color: "#555555",
   },
 

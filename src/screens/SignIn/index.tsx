@@ -1,4 +1,5 @@
 import * as React from "react";
+import { StatusBar } from "expo-status-bar";
 
 //Hooks
 import { useAuth } from "../../hooks/useAuth";
@@ -18,16 +19,18 @@ import {
 
 //SVG
 import LogoGoogleSvg from "../../assets/logo_google.svg";
-import LogoGithubSvg from "../../assets/logo_github.svg";
 
 const SignIn: React.FC = () => {
-  const { user, loadingAuthGoogle, loadingAuthGithub, signInWithGoogle } =
-    useAuth();
+  const { user, isLoading, signInWithGoogle } = useAuth();
 
-  console.log(user);
+  function handleSignInWithGoogle() {
+    signInWithGoogle();
+  }
 
   return (
     <Container>
+      <StatusBar style="light" translucent={true} />
+
       <LogoWrapper>
         <Logo source={require("../../assets/logo.png")} />
       </LogoWrapper>
@@ -38,15 +41,9 @@ const SignIn: React.FC = () => {
         <ButtonWrapper>
           <Button
             icon={LogoGoogleSvg}
-            title="Google"
-            isLoading={loadingAuthGoogle}
-            onPress={signInWithGoogle}
-          />
-
-          <Button
-            icon={LogoGithubSvg}
-            title="GitHub"
-            isLoading={loadingAuthGithub}
+            title={isLoading ? "Entering..." : "Sign in with Google"}
+            onPress={handleSignInWithGoogle}
+            disabled={isLoading}
           />
         </ButtonWrapper>
       </Content>

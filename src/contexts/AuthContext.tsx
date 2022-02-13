@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as AuthSession from "expo-auth-session";
 import {
   GOOGLE_CLIENT_ID,
@@ -14,12 +15,15 @@ import { googleOAuthApi } from "../services/api";
 //DTOS
 import { UserDTO } from "../dtos";
 
+//Storages
+import { COLLECTION_USER } from "../storages";
+
 //Interfaces
 interface AuthContextData {
   user: UserDTO;
-  loadingAuthGoogle: boolean;
-  loadingAuthGithub: boolean;
+  isLoading: boolean;
   signInWithGoogle: () => void;
+  logOut: () => void;
 }
 
 interface AuthProviderProps {
@@ -37,19 +41,25 @@ export const AuthContext = React.createContext({} as AuthContextData);
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = React.useState<UserDTO>({} as UserDTO);
-  const [loadingAuthGoogle, setLoadingAuthGoogle] =
-    React.useState<boolean>(false);
-  const [loadingAuthGithub, setLoadingAuthGithub] = React.useState();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+  async function loadUser() {
+    const userStoraged = await AsyncStorage.getItem(COLLECTION_USER);
+
+    if (userStoraged) {
+      const userLogged = JSON.parse(userStoraged);
+
+      setUser(userLogged);
+    }
+  }
 
   async function signInWithGoogle() {
     try {
-      setLoadingAuthGoogle(true);
+      setIsLoading(true);
 
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=${GOOGLE_RESPONSE_TYPE}&scope=${encodeURI(
         String(GOOGLE_SCOPE)
       )}`;
-
-      console.log(authUrl);
 
       const { params, type } = (await AuthSession.startAsync({
         authUrl,
@@ -72,25 +82,40 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               photo: response.data.picture,
             };
 
-            setLoadingAuthGoogle(true);
             setUser(userLogged);
 
-            // await AsyncStorage.setItem(
-            //   COLLECTION_USER,
-            //   JSON.stringify(userLogged)
-            // );
+            await AsyncStorage.setItem(
+              COLLECTION_USER,
+              JSON.stringify(userLogged)
+            );
           });
       }
     } catch (error) {
-      setLoadingAuthGoogle(false);
-
-      Alert.alert("Atenção!", "Não foi possível fazer o login com o google.");
+      console.log(error.message);
+      Alert.alert("Don't was possible to connect google account");
+    } finally {
+      setIsLoading(false);
     }
   }
 
+  async function logOut() {
+    await AsyncStorage.removeItem(COLLECTION_USER);
+
+    setUser({} as UserDTO);
+  }
+
+  React.useEffect(() => {
+    loadUser();
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ user, loadingAuthGoogle, loadingAuthGithub, signInWithGoogle }}
+      value={{
+        user,
+        isLoading,
+        signInWithGoogle,
+        logOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

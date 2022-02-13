@@ -6,7 +6,7 @@ export const Container = styled.View`
   align-items: center;
   justify-content: center;
 
-  padding: 20px 32px;
+  padding: 20px 24px;
 
   background-color: ${({ theme }) => theme.colors.background};
 `;
@@ -21,7 +21,7 @@ export const Logo = styled.Image`
 export const Content = styled.View`
   width: 100%;
 
-  margin-top: 60px;
+  margin-top: 100px;
 `;
 
 export const Title = styled.Text`
@@ -32,4 +32,6 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.colors.primary_text};
 `;
 
-export const ButtonWrapper = styled.View``;
+export const ButtonWrapper = styled.View`
+  margin-top: 12px;
+`;

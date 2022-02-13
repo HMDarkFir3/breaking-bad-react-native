@@ -38,12 +38,6 @@ export const IconArea = styled.View`
   border-color: ${({ theme }) => theme.colors.primary_text};
 `;
 
-export const LoadingWrapper = styled.View`
-  flex: 1;
-`;
-
-export const Loading = styled.ActivityIndicator``;
-
 export const Title = styled.Text`
   flex: 1;
 

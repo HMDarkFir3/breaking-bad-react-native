@@ -10,6 +10,7 @@ declare module "styled-components" {
       secondary: string;
       placeholder_color: string;
       primary_text: string;
+      secondary_text: string;
     };
 
     fonts: {

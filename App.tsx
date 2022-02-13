@@ -1,5 +1,4 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { ThemeProvider } from "styled-components";
 import AppLoading from "expo-app-loading";
@@ -13,6 +12,7 @@ import {
 
 //Contexts
 import AuthProvider from "./src/contexts/AuthContext";
+import BreakingBadProvider from "./src/contexts/BreakingBadContext";
 
 //Routes
 import Routes from "./src/routes";
@@ -35,8 +35,9 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={dark}>
       <AuthProvider>
-        <StatusBar style="light" translucent={true} />
-        <Routes />
+        <BreakingBadProvider>
+          <Routes />
+        </BreakingBadProvider>
       </AuthProvider>
     </ThemeProvider>
   );
