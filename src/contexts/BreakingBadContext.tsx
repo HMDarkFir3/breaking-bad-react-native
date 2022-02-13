@@ -27,21 +27,21 @@ export const BreakingBadContext = React.createContext(
 const BreakingBadProvider: React.FC<BreakingBadProviderProps> = ({
   children,
 }) => {
-  const [characters, setCharacters] = React.useState<CharactersDTO[]>(null);
-  const [episodes, setEpisodes] = React.useState<EpisodesDTO[]>(null);
+  const [characters, setCharacters] = React.useState<CharactersDTO[]>([]);
+  const [episodes, setEpisodes] = React.useState<EpisodesDTO[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   async function fetchCharacters(search: string) {
     try {
       setIsLoading(true);
 
-      const response = await breakingBadApi.get<CharactersDTO>("/characters", {
+      const response = await breakingBadApi.get("/characters", {
         params: {
           category: search,
         },
       });
 
-      setCharacters([response.data]);
+      setCharacters(response.data);
     } catch (error) {
       console.log(error.message);
       Alert.alert("Don't was possible to show the characters");
@@ -54,13 +54,13 @@ const BreakingBadProvider: React.FC<BreakingBadProviderProps> = ({
     try {
       setIsLoading(true);
 
-      const response = await breakingBadApi.get<EpisodesDTO>("/episodes", {
+      const response = await breakingBadApi.get("/episodes", {
         params: {
           series: search,
         },
       });
 
-      setEpisodes([response.data]);
+      setEpisodes(response.data);
     } catch (error) {
       console.log(error.message);
       Alert.alert("Don't was possible to show the episodes");

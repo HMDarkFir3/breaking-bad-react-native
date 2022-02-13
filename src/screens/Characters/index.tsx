@@ -1,9 +1,13 @@
 import * as React from "react";
+import { FlatList } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "styled-components";
 
 //Hooks
 import { useBreakingBad } from "../../hooks/useBreakingBad";
+
+//Components
+import CharactersCard from "../../components/CharactersCard";
 
 //Styles
 import { Container, LoadingContainer, Loading } from "./styles";
@@ -30,6 +34,20 @@ const Characters: React.FC = () => {
   return (
     <Container>
       <StatusBar style="light" backgroundColor={theme.colors.primary} />
+
+      <FlatList
+        data={characters}
+        keyExtractor={(item) => String(item.char_id)}
+        renderItem={({ item, index }) => (
+          <CharactersCard
+            data={item}
+            index={index}
+            lastIndex={characters.length - 1}
+          />
+        )}
+        style={{ marginVertical: 20 }}
+        showsVerticalScrollIndicator={false}
+      />
     </Container>
   );
 };
