@@ -4,7 +4,12 @@
     "slug": "favorite-breaking-bad",
     "scheme": "favorite-breaking-bad",
     "version": "1.0.0",
-    "assetBundlePatterns": ["**/*"]
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.hmdarkfire.favoritebreakingbad"
+    }
   },
   "name": "favorite-breaking-bad"
 }

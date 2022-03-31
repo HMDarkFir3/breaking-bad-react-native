@@ -1,10 +1,13 @@
 import * as React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "styled-components";
 
-//Hooks
-import { useBreakingBad } from "../../hooks/useBreakingBad";
+//Services
+import { breakingBadApi } from "../../services/api";
+
+//DTOS
+import { EpisodesDTO } from "../../dtos/EpisodesDTO";
 
 //Components
 import EpisodesCard from "../../components/EpisodesCard";
@@ -13,10 +16,29 @@ import EpisodesCard from "../../components/EpisodesCard";
 import { Container, LoadingContainer, Loading } from "./styles";
 
 const Episodes: React.FC = () => {
-  const { episodes, isLoading, fetchEpisodes } = useBreakingBad();
   const theme = useTheme();
 
+  const [episodes, setEpisodes] = React.useState<EpisodesDTO[]>([]);
   const [search, setSearch] = React.useState<string>("breaking bad");
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  async function fetchEpisodes(search: string) {
+    await breakingBadApi
+      .get<EpisodesDTO[]>("/episodes", {
+        params: {
+          category: search,
+        },
+      })
+      .then((response) => {
+        setEpisodes(response.data);
+      })
+      .catch(() => {
+        Alert.alert("Don't was possible to show the episodes");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   React.useEffect(() => {
     fetchEpisodes(search);
@@ -43,6 +65,7 @@ const Episodes: React.FC = () => {
             lastIndex={episodes.length - 1}
           />
         )}
+        showsVerticalScrollIndicator={false}
         style={{ marginVertical: 20 }}
       />
     </Container>

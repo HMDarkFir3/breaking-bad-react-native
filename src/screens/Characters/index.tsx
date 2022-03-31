@@ -1,13 +1,13 @@
 import * as React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "styled-components";
 
 //Services
 import { breakingBadApi } from "../../services/api";
 
-//Hooks
-import { useBreakingBad } from "../../hooks/useBreakingBad";
+//DTOS
+import { CharactersDTO } from "../../dtos/CharactersDTO";
 
 //Components
 import CharactersCard from "../../components/CharactersCard";
@@ -18,10 +18,10 @@ import { Container, LoadingContainer, Loading } from "./styles";
 const Characters: React.FC = () => {
   const theme = useTheme();
 
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [search, setSearch] = React.useState<string>("breaking bad");
-  const [characters, setCharacters] = React.useState([]);
+  const [characters, setCharacters] = React.useState<CharactersDTO[]>([]);
   const [offset, setOffset] = React.useState<number>(0);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
 
   function handleLoadMore() {
@@ -33,7 +33,7 @@ const Characters: React.FC = () => {
 
   async function fetchCharacters(search: string, offset: number) {
     await breakingBadApi
-      .get("/characters", {
+      .get<CharactersDTO[]>("/characters", {
         params: {
           category: search,
           limit: 10,
@@ -46,6 +46,9 @@ const Characters: React.FC = () => {
         } else {
           setCharacters((prevState) => [...prevState, ...response.data]);
         }
+      })
+      .catch(() => {
+        Alert.alert("Don't was possible to show the characters");
       })
       .finally(() => {
         setIsLoading(false);
@@ -60,7 +63,7 @@ const Characters: React.FC = () => {
     return (
       <>
         {loadingMore && (
-          <LoadingContainer style={{ paddingVertical: 20 }}>
+          <LoadingContainer style={{ marginTop: 20 }}>
             <Loading size="large" color={theme.colors.secondary} />
           </LoadingContainer>
         )}

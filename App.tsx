@@ -12,7 +12,6 @@ import {
 
 //Contexts
 import AuthProvider from "./src/contexts/AuthContext";
-import BreakingBadProvider from "./src/contexts/BreakingBadContext";
 
 //Routes
 import Routes from "./src/routes";
@@ -35,9 +34,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={dark}>
       <AuthProvider>
-        <BreakingBadProvider>
-          <Routes />
-        </BreakingBadProvider>
+        <Routes />
       </AuthProvider>
     </ThemeProvider>
   );
