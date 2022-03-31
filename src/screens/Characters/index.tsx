@@ -3,6 +3,9 @@ import { FlatList } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "styled-components";
 
+//Services
+import { breakingBadApi } from "../../services/api";
+
 //Hooks
 import { useBreakingBad } from "../../hooks/useBreakingBad";
 
@@ -13,14 +16,57 @@ import CharactersCard from "../../components/CharactersCard";
 import { Container, LoadingContainer, Loading } from "./styles";
 
 const Characters: React.FC = () => {
-  const { characters, isLoading, fetchCharacters } = useBreakingBad();
   const theme = useTheme();
 
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [search, setSearch] = React.useState<string>("breaking bad");
+  const [characters, setCharacters] = React.useState([]);
+  const [offset, setOffset] = React.useState<number>(0);
+  const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
+
+  function handleLoadMore() {
+    setLoadingMore(true);
+    setOffset((prevState) => prevState + 10);
+
+    fetchCharacters(search, offset);
+  }
+
+  async function fetchCharacters(search: string, offset: number) {
+    await breakingBadApi
+      .get("/characters", {
+        params: {
+          category: search,
+          limit: 10,
+          offset: offset,
+        },
+      })
+      .then((response) => {
+        if (offset === 0) {
+          setCharacters(response.data);
+        } else {
+          setCharacters((prevState) => [...prevState, ...response.data]);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   React.useEffect(() => {
-    fetchCharacters(search);
+    fetchCharacters(search, offset);
   }, []);
+
+  function renderFooter() {
+    return (
+      <>
+        {loadingMore && (
+          <LoadingContainer style={{ paddingVertical: 20 }}>
+            <Loading size="large" color={theme.colors.secondary} />
+          </LoadingContainer>
+        )}
+      </>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -47,6 +93,9 @@ const Characters: React.FC = () => {
         )}
         style={{ marginVertical: 20 }}
         showsVerticalScrollIndicator={false}
+        onEndReachedThreshold={0.5}
+        onEndReached={handleLoadMore}
+        ListFooterComponent={renderFooter}
       />
     </Container>
   );
